@@ -27,7 +27,7 @@ and must also be separated from other text by at least one empty line.
 All lecture notes will be provided as literate source files. Here's what code
 would look like in a literate source file:
 
-> welcome = putStrLn "Welcome to CS 340!"
+> welcome = putStrLn "Welcome to CS 340! a change"
 
 
 Development workflow and tools
@@ -64,11 +64,11 @@ Notable (& maybe surprising) language features
 >
 > mysteryVar1 = 123 `mod` 8
 >
-> mysteryVar2 = words "hello how are you?"
-> 
+> mysteryVar2 = words "hello how are you? a change"  --Type = List of strings
+>  -- ^^ Words is a function that takes a string and returns a list of strings ^^
 > mysteryFn1 = (^2)
 >
-> mysteryFn2 = length . words
+> mysteryFn2 = length . words -- . Means a composition of two funtions (length and words)
 > 
 > mysteryFn3 f s = [(abs $ f $ length w, w) | w <- words s]
 
@@ -119,8 +119,8 @@ Notable (& maybe surprising) language features
    - Declarative vs. Imperative style!
 
 > palindromes = sortOn snd
->               . map (\w -> (w,length w))
->               . filter (\s -> reverse s == s)
+>               . map (\w -> (w,length w)) --for every palindrom, map it to tuple via length of strings
+>               . filter (\s -> reverse s == s) --filter runs when function returns true
 >               . words 
 
 

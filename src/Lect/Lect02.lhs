@@ -55,6 +55,8 @@ What are the types of the following?
     (True)
     (1, 2, 3, True)
 
+> --foo :: (Char, Bool, Bool)
+> --foo = ('b', False, 'c')
 
 Function types
 --------------
@@ -74,11 +76,13 @@ A function of multiple arguments can be implemented in different ways:
 
   1. A function that takes a tuple of the requisite types, e.g.,
 
-         foo :: (Bool, Char) -> Int
+> foo :: (Bool, Char) -> Int
+> foo (True, 'a') = 0
 
   2. Functions that return other functions, e.g.,
 
-         foo :: Bool -> (Char -> Int)
+> --foo :: Bool ->(Char -> Int)
+> --foo b c = undefined 
 
      We interpret this type as a function which takes a `Bool` and returns
      another function which takes a `Char` and returns an `Int`.
