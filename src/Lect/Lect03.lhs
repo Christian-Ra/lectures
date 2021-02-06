@@ -35,7 +35,7 @@ Examples:
 > nand a b = not (a && b)
 >
 >
-> discriminant :: Num a => a -> a -> a -> a
+> --discriminant :: Num a => a -> a -> a -> a
 > discriminant a b c = b^2 - 4*a*c
 >
 >
@@ -59,7 +59,7 @@ A catch-all pattern, where a variable is specified instead of a data value, can
 be used to match parameters not specified in earlier patterns.
 
 > fib :: Integer -> Integer
-> fib 0 = 1
+> fib 0 = 0
 > fib 1 = 1
 > fib n = fib (n-1) + fib (n-2)
 
@@ -83,8 +83,11 @@ Patterns can also be used to "deconstruct" values. E.g., for tuples:
 > distanceFromOrigin (0,y) = abs y
 > distanceFromOrigin (x,y) = sqrt (x^2 + y^2)
 >
+> distance :: (Floating a, Eq a) => (a, a) -> (a, a) -> a
+> distance (x1, y1) (x2, y2) = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
 >
-> mapTup :: (a -> b) -> (a,a) -> (b,b)
+>
+> mapTup :: (a -> b) -> (a,a) -> (b,b) --coverts each a to a b by inputting it into a function
 > mapTup f (x,y) = (f x, f y)
 
 
@@ -95,7 +98,8 @@ equations in a function definition. The `otherwise` keyword (which is just
 `True` in disguise) can be used to provide a catch-all equation.
 
 > fib' :: Integer -> Integer
-> fib' n | n <= 1    = 1
+> fib' n | n == 0    = 0
+>        | n == 1    = 1
 >        | otherwise = fib' (n-1) + fib' (n-2)
 >
 >

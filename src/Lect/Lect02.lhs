@@ -76,8 +76,8 @@ A function of multiple arguments can be implemented in different ways:
 
   1. A function that takes a tuple of the requisite types, e.g.,
 
-> foo :: (Bool, Char) -> Int
-> foo (True, 'a') = 0
+> --foo :: (Bool, Char) -> Int
+> --foo (True, 'a') = 0
 
   2. Functions that return other functions, e.g.,
 
@@ -111,6 +111,7 @@ its argument(s), e.g.,
 
 Function application associates left-to-right, so 
 
+    foo :: Int -> Bool -> Char
     foo 5 True 'a'
 
 is equivalent to:
@@ -160,6 +161,8 @@ E.g., a function which takes a two-tuple and returns the first element has type:
 
     fst :: (a, b) -> a
 
+> --foo :: (a, a, a) -> a
+> --foo (x, y , z) = x
 
 Since an unqualified type variable says nothing about its actual type, you can't
 do much with the value of the corresponding argument.
@@ -170,7 +173,10 @@ determining what it does!
 e.g., what do `snd`, `id`, `const`, do, based on their types?
 
 e.g., try to decipher the types of `.` and `until`
-
+(.) =  function composition
+until is a function that takes a funciton that determines when the loop should end
+second function evaluates what the next value should be, and finally what the initial value of a is
+returns a
 
 Type Classes (aka Classes)
 --------------------------
