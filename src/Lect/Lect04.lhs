@@ -249,6 +249,8 @@ Note: many of these functions operate on a type class that includes lists and
 List processing functions
 -------------------------
 
+> fst' (x,_) = x
+
 -- Pattern matching
 
 `[]` and `:` can be used to pattern match against lists (we'll see that all
@@ -256,7 +258,7 @@ value constructors can be used for pattern matching). So the first three basic
 operations are trivial to re-implement:
 
 > head' :: [a] -> a
-> head' (x:_) = x
+> head' (x:xs) = x
 >
 > tail' :: [a] -> [a]
 > tail' (_:xs) = xs
@@ -289,41 +291,60 @@ Pattern matching in Haskell helps with both (1) and (3).
 E.g., to compute the length of a list:
 
 > length' :: [a] -> Int
-> length' [] = 0
+> length' [] = 0 -- base case
 > length' (x:xs) = 1 + length' xs
 
 E.g., more built-in functions:
 
 > last' :: [a] -> a
-> last' = undefined
->
+> last' [] = error "empty list"
+> last' [x] = x
+> last' (_:xs) = last' xs
 >
 > (+++) :: [a] -> [a] -> [a]
-> (+++) = undefined
+> --redundant [] +++ [] = []
+> xs +++ [] = xs
+> [] +++ ys = ys
+> (x:xs) +++ ys = x : (xs +++ ys) 
 >
 >
 > (!!!) :: [a] -> Int -> a -- the ! in its name is an implicit warning as to its inefficiency!
-> (!!!) = undefined
+> [] !!! _ = error "index too large"
+> (x:_) !!! 0 = x
+> (x:xs) !!! n = xs !!! (n-1)
 >
 >
 > reverse' :: [a] -> [a]
-> reverse' = undefined
+> reverse' [] = []
+> --reverse' irrevelent, recursive call handles this pattern[x] = [x]
+> reverse' (x:xs) = reverse' xs +++ [x] --very inefficient
 >
 >
 > take' :: Int -> [a] -> [a]
-> take' = undefined
+> take' _ [] = []
+> take' 0 _ = []
+> take' n (x:xs) = x : take' (n-1) xs
 >
 >
 > splitAt' :: Int -> [a] -> ([a], [a])
-> splitAt' = undefined
+> splitAt' _ [] = ([],[])
+> splitAt' 0 xs = ([],xs)
+> splitAt' n (x:xs) = let (ys, zs) = splitAt' (n-1) xs
+>                     in (x:ys, zs)
 >
 >
 > break' :: (a -> Bool) -> [a] -> ([a], [a])
-> break' = undefined
+> break' _ [] = ([], [])
+> break' p l@(x:xs)| p x = ([], l)
+>                  | otherwise = let (ys, zs) = break' p xs
+>                                in  (x:ys, zs)
 >
 >
 > words' :: String -> [String]
-> words' = undefined
+> words' "" = []
+> words' l@(c:cs)   | isSpace c = words' cs
+>                   | otherwise= let (w,ws) = break' isSpace l
+>                               in w : words' ws
 
 E.g., the Caesar cipher is an encryption scheme that takes a plain text input
 string P and a shift value N, and produces an encrypted version of the string
@@ -341,4 +362,10 @@ determine if a character is a letter. We'll convert all letters to uppercase
 for simplicity with `toUpper`.
 
 > caesar :: Int -> String -> String
-> caesar = undefined
+> caesar _ "" = ""
+> caesar 0 s = s
+> caesar n (c:cs) = (if isLetter c then encrypt c else c) : caesar n cs
+>    where encrypt c = n2c ((c2n c +n) `mod` 26)
+>          n2c n = chr (n + ordA)
+>          c2n c = ord (toUpper c) - ordA
+>          ordA = 65
