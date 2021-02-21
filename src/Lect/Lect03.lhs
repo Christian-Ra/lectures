@@ -72,8 +72,8 @@ Patterns can also be used to "deconstruct" values. E.g., for tuples:
 > fst' = undefined
 >
 > 
-> distance :: (Floating a, Eq a) => (a,a) -> (a,a) -> a
-> distance p1 p2 = sqrt ((fst p1 - fst p2)^2 + (snd p1 - snd p2)^2)
+> --distance :: (Floating a, Eq a) => (a,a) -> (a,a) -> a
+> --distance p1 p2 = sqrt ((fst p1 - fst p2)^2 + (snd p1 - snd p2)^2)
 >
 > distance :: (Floating a, Eq a) => (a, a) -> (a, a) -> a
 > distance (x1, y1) (x2, y2) = sqrt ((x1 - x2)^2 + (y1 - y2)^2)

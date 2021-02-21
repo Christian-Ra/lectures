@@ -65,7 +65,7 @@ Notable (& maybe surprising) language features
 > mysteryVar1 = 123 `mod` 8
 >
 > mysteryVar2 = words "hello how are you? a change"  --Type = List of strings
->  -- ^^ Words is a function that takes a string and returns a list of strings ^^
+>  -- Words is a function that takes a string and returns a list of strings ^
 > mysteryFn1 = (^2)
 >
 > mysteryFn2 = length . words -- . Means a composition of two funtions (length and words)
