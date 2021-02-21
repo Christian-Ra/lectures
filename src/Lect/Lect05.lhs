@@ -3,6 +3,7 @@
 % Michael Lee
 
 > module Lect.Lect05 where
+> import Data.Char
 > import Control.Exception
 > import Test.HUnit
 > import Test.HUnit.Approx
@@ -95,7 +96,7 @@ Hspec gives us a way to specify tests in a human-legible way:
   - You can test a specific module with: `stack test --test-arguments "-m MP.MP1"`
 
   - We typically put all test code in the "test" directory --- all `Spec`s
-    defined in this file are in "Lect04Spec.hs"
+    defined in this file are in "Lect05Spec.hs"
 
 
 Unit tests with Hspec/HUnit
@@ -208,6 +209,16 @@ E.g., some arithmetic properties:
 > prop_distMultOverAdd x y z = x * (y + z) == x * y + x * z
 
 Test predicates by passing them to `quickCheck` or `verboseCheck`.
+
+---
+
+E.g., shrinking in action:
+
+> prop_wrongSum :: [Int] -> Bool
+> prop_wrongSum xs = sum xs == brokenSum xs
+>   where brokenSum [] = 0
+>         brokenSum (8:xs) = 7 + brokenSum xs
+>         brokenSum (x:xs) = x + brokenSum xs
 
 ---
 
