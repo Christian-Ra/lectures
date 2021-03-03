@@ -31,16 +31,20 @@ themselves require stepping through the design process!
 
 E.g., summing integer values from 0 up to N:
 
-> sumTo :: undefined
-> sumTo = undefined
+> sumTo :: Integral a => a -> a
+> sumTo 0 = 0
+> sumTo 1 = 1
+> sumTo n = n + sumTo (n-1)
 
 --- 
 
 E.g., compute all permutations of values in a list
 
-> permutations :: undefined
-> permutations = undefined
-
+> -- permutations :: [a] -> [[a]]
+> --permutations [] = [[]]
+> --permutations (x:xs) = concat [interleave x p | p <- permutations xs]
+> --where interleave x [] = [[x]]
+>   --    interleave x l@(y:ys) = (x:l) : [y:ll | ll <- interleave x ys]
 
 Structural vs. Generative recursion
 -----------------------------------
@@ -66,8 +70,16 @@ E.g., Newton's method for finding the square root of N starts with a guess g
       guess, and if g is too big, n/g will decrease.
 
 
-> newtonsSqrt :: undefined
-> newtonsSqrt = undefined
+> newtonsSqrt :: (Floating a, Ord a) =>  a -> a
+> newtonsSqrt n = iter (n/2) 
+>   where --goodEnough :: (Floating a, Ord a) =>  a -> Bool
+>         goodEnough g = g^2 =~= n
+>         --improveGuess :: (Floating a, Ord a) =>  a -> a
+>         improveGuess g = (g + n / g) / 2
+>         --iter :: (Floating a, Ord a) =>  a -> a
+>         iter g | goodEnough g = g
+>                | otherwise = iter (improveGuess g)
+>         
 >
 > infix 4 =~= -- approx equals (might come in handy)
 > (=~=) :: (Floating a, Ord a) =>  a -> a -> Bool
@@ -78,8 +90,15 @@ E.g., Newton's method for finding the square root of N starts with a guess g
 E.g., sort a list of values by splitting it in two, sorting each half, then 
 merging the sorted results:
 
-> mergesort :: undefined
-> mergesort = undefined
+> mergesort :: Ord a => [a] -> [a]
+> mergesort [] = []
+> mergesort [x] = [x]
+> mergesort xs = let (lhs, rhs) = splitAt (length xs `div` 2) xs
+>                in merge (mergesort lhs) (mergesort rhs)
+>   where merge xs [] = xs
+>         merge [] xs = xs
+>         merge l1@(x:xs) l2@(y:ys) | x <= y    = x : merge xs l2
+>                                   | otherwise = y : merge l1 ys
 
 
 Accumulators and Tail recursion
@@ -101,7 +120,8 @@ recursive call) in order to do its job. It would be more efficient to use the
 of the recursion. 
 
 > reverse'' :: [a] -> [a] -> [a]
-> reverse'' = undefined
+> reverse'' (x:xs) rev = reverse'' xs (x:rev)
+> reverse'' [] rev = rev
 
 The second argument of `reverse''` needs to be "primed" with an empty list, and
 then gradually accumulates the solution, which we obtain at the end of the 
@@ -112,7 +132,8 @@ typically hidden inside where clauses:
 
 > reverse''' :: [a] -> [a]
 > reverse''' xs = rev xs []
->   where rev = undefined
+>   where rev (x:xs) r = rev xs (x:r)
+>         rev [] r = r
 
 Try doing ":set +s" in ghci, then comparing outputs for the following:
 
