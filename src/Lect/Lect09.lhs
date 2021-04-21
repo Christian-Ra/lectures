@@ -163,9 +163,12 @@ in one Functor to a value in another Functor.
 Let's make `Maybe` an Applicative instance:
 
 > instance Applicative Maybe where
->   pure = undefined
->
->   (<*>) = undefined
+>   --pure :: a -> Maybe a
+>   pure = Just 
+>   
+>   -- (<*>) :: Maybe (a -> b) -> Maybe a -> Maybe b
+>   Just f <*> Just x = Just $ f x
+>   _ <*> _ = Nothing
 
 
 Now we can do:
@@ -299,7 +302,8 @@ methods `>>=` ("bind"), `>>` ("sequence"), and `return`:
 Let's make `Maybe` a Monad instance:
 
 > instance Monad Maybe where
->   (>>=) = undefined
+>   Nothing >>= _ = Nothing
+>   Just x >>= f = f x
 
 Now we get sensible results by doing:
 
@@ -330,12 +334,23 @@ integral operands:
 Without bind, we might write:
 
 > fDivs :: Integral a => a -> a -> a -> a -> a -> a -> Maybe a
-> fDivs a b c d e f = undefined
+> fDivs a b c d e f = case a `safeDiv` b 
+>                     of Nothing -> Nothing
+>                        Just r -> 
+>                          case c `safeDiv` d
+>                          of Nothing -> Nothing 
+>                             Just r' -> 
+>                               case (r + r') `safeDiv` e
+>                               of Nothing -> Nothing
+>                                  Just r'' -> Just $ r'' * f
 
 Or we can use our bind operator:
 
 > fDivs' :: Integral a => a -> a -> a -> a -> a -> a -> Maybe a
-> fDivs' a b c d e f = undefined
+> fDivs' a b c d e f = a `safeDiv` b >>= \r  ->
+>                      c `safeDiv` d >>= \r' ->
+>                      (r + r') `safeDiv` e >>= \\r'' ->
+>                      Just $ r'' * f
 
 Explain how this works!
 

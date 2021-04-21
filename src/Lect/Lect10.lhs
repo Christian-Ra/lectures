@@ -72,7 +72,7 @@ log messages:
 > data Logger a = Logger {
 >   loggerVal  :: a,
 >   loggerMsgs :: [String]
-> } deriving (Show)
+> } deriving (Show)5
 
 
 As a functor, we should be able to apply functions to the value in a `Logger`:
